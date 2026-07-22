@@ -122,3 +122,4 @@ You can download JDK in your system from Oracle from any other website.
 ## Table of Contents
 
 1. [First Program](./01FirstProgram)
+2. [Variables and Data Types](./02VariablesDataTypes)

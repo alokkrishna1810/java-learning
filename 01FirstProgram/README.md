@@ -32,3 +32,15 @@ This program when compiled and run, gives the following output:
 ```
 Hello World!
 ```
+
+For now consider the below code block as black box and just focus on what is inside this block. Later on, we will understand everything:
+
+```java
+public class Demo {
+    public static void main(String[] args) {
+        ...
+        ...
+        ...
+    }
+}
+```
