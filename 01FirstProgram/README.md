@@ -14,7 +14,7 @@
     java Demo
     ```
 
-- The **JRE** with the help of **JVM** which contains the _interpreter_ and the _JIT compiler_ contains the bytecode into machine code.
+- The **JRE** with the help of **JVM** which contains the _interpreter_ and the _JIT compiler_, converts the bytecode into machine code.
 - The machine code gives instructions to the CPU and it gives output.
 
 ## Hello World! Program
