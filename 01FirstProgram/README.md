@@ -26,3 +26,9 @@ public class Demo {
     }
 }
 ```
+
+This program when compiled and run, gives the following output:
+
+```
+Hello World!
+```
