@@ -40,7 +40,7 @@ This is used when destination data type is narrower than source data type. **For
 // Explicit Type Conversion or Narrowing
 
 int i = 300; // i = 300 => 00000000 00000000 00000001 00101100
-byte b = (byte) i; // b = 44 => 00101100 (data truncated) or 300 % 256 = 44
+byte b = (byte) i; // b = 44 => 00101100 (data truncated) or 300 & 255 (take lower 8 bits) or simply 300 % 256 = 44
 ```
 
 > **Note:** There is another type conversion which comes under **Narrowing**. That is called **Truncating Conversion**. This happens when we try to convert _floating_ numbers to _integers_.
