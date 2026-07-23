@@ -157,7 +157,7 @@ The computer memory stores everything into binary numbers, i.e., `0`s and `1`s. 
 
 Every number is signed in Java. So, the MSB is reserved as the _sign bit_. `1` represents negative and `0` represents positive.
 
-If an integer data type has a size of `n` bits and the MSB is reserved as the _sign bit_, the range of the data type will be from `-2`<sup>`n - 1`</sup> to `2`<sup>`n - 1`</sup> `-` `1`.
+If an integer data type has a size of `n` bits and the MSB is reserved as the _sign bit_, the range of the data type will be from $-(2)^{\text{n} - 1}$ to $2^{\text{n} - 1} - 1$.
 
 > To represent `long` numbers, you can put an optional `l` or `L`.
 
@@ -193,7 +193,7 @@ These data types represents decimal numbers. For example, `5.23`.
 
 > By default, a decimal number is a `double` type. For `float` type, you have to write an `f` or `F` after the decimal number without spaces. For `double`, a `d` or `D` after the decimal number is optional.
 
-> **Scientific Notation**: To represent numbers like `6.022 * 10`<sup>`-23`</sup>, we can just write `6.022e-23` or `6.022E-23`.
+> **Scientific Notation**: To represent numbers like $6.022 \times 10^{-23}$, we can just write `6.022e-23` or `6.022E-23`.
 
 > **Note:** To make large numbers readable, you can use one or more underscores (`_`) between any two digits. The compiler will ignore these underscores. But you cannot place them in start, end, before or after non-digits in any numeber system. **For example**, `341256789.79` can be written as `34_12_56_789.79`.
 
@@ -282,3 +282,105 @@ By default, every number written in code is considered as an ordinary base-10 nu
 - **Binary:** `0b101` or `0B101` for `5`
 - **Octal:** `017` for `15`
 - **Hexadecimal:** `0xF` or `0XF` for `15`
+
+## How Java stores negative and floating numbers
+
+### Negative Numbers
+
+For negative numbers, Java stores the `2`'_s complement_ of the number.
+
+**For example**,
+
+```java
+byte b = -42;
+```
+
+- Binary of `42`: `00101010` (_as_ `byte` _size is_ `8` _bits._)
+- Invert the bits or `1`'_s complement_: `11010101`
+- Add `1` to get `2`'_s complement_: `11010101` `+` `1` = `11010110`
+
+> The MSB `1` represents a negative number. It cannot be a positive number. **For example**, `byte` size is `8` bits, the maximum positive number is `127`, which is `01111111`. Hence, a positive number has MSB `0` and a negative number has MSB `1`.
+
+To retrieve data, MSB `1` represents negative number and find `2`'_s complement_ again to decode the number.
+
+**For example**, `11010110` has MSB `1`, and `2`'_s complement_ is `00101010` which is 42. So, the number is `-42`.
+
+> **Note:** If we had used `1`'_s complement_, then `+0` is `00000000` and `-0` is `11111111` but both are same number. This does not happen when we use `2`'_s complement_.
+
+### Floating numbers
+
+```java
+float f1 = 8.125f;
+float f2 = 0.7f;
+
+// This prints the number upto 20 decimal places
+System.out.printf("%.20f%n", f1); // 8.12500000000000000000
+System.out.printf("%.20f%n", f2); // 0.69999998807907100000
+```
+
+First convert the floating number to standard binary form (e.g., $1.011 \times 2^{3}$).
+
+According to the **IEEE 754 Standard**, every floating-point number is split into three specific segments:
+
+1. **Sign bit (`1` bit):** Determines if the number is positive or negative.
+2. **Exponent:** Determines the magnitude or position of the decimal point. To store negative exponents efficiently, Java applies a "_bias_" (`127` for `float`, `1023` for `double`).
+3. **Mantissa / Significand:** Stores the actual numeric digits of the number. Binary scientific notation always normalizes numbers to start with a leading `1` (e.g., $1.011 \times 2^{3}$), this leading `1` is omitted from storage to save a bit.
+
+To retrieve it back, we use the formuala:
+
+$$
+(-1)^{\text{sign}} \times (1 + \text{mantissa}) \times 2^{\text{exponent} - \text{bias}}
+$$
+
+| Component | `float` | `double` |
+|---|---|---|
+| **Sign Bit** | `1` bit | `1` bit |
+| **Exponent** | `8` bits | `11` bits |
+| **Mantisaa** | `23` bits | `52` bits |
+| **Bias Value** | `127` | `1023` |
+
+**For example**, `8.125f`
+
+- Binary form: `1000.001`
+- Standard form: $1.000001 \times 2^{3}$
+
+Now, we can store it as:
+
+1. Sign bit: `0` (`1` bit)
+2. Exponent: `3` + `127` = `130`, which is `10000010` (`8` bits)
+3. Mantissa: `000001 00000000000000000` (`23` bits)
+
+So, the value stored is `0 10000010 00000100000000000000000` (`32` bits).
+
+To retrieve:
+
+- Sign bit: `0`, means positive
+- Exponent: `10000010`, means `130`
+- Mantissa: 0.`00000100000000000000000`, which is $2^{-6}$
+- Bias: `127` for `float`
+
+So, the number is: $(-1)^{0} \times (1 + 2^{-6}) \times 2^{130 - 127}$ = `8.125`.
+
+**Take another example**, `0.7f`
+
+- Binary form: `0.1 0110 0110 0110 ...` (_non-terminating repeating_)
+- Standard form: $1.0110 0110 0110\text{...} \times 2^{-1}$
+
+We can store it as:
+
+1. Sign bit: `0` (`1` bit)
+2. Exponent: `-1` + `127` = `126`, which is `01111110` (`8` bits)
+3. Mantissa: `0110 0110 0110 0110 0110 011` (`23` bits)
+
+So, the value stored is `0 01111110 01100110011001100110011` (`32` bits).
+
+To retrieve:
+
+- Sign bit: `0`, means positive
+- Exponent: `01111110`, means `126`
+- Mantissa: 0.`01100110011001100110011`, which is ($2^{-2} + 2^{-3} +2^{-6} + 2^{-7} + 2^{-10} + 2^{-11} + 2^{-14} + 2^{-15} + 2^{-18} + 2^{-19} + 2^{-22} + 2^{-23}$)
+- Bias: `127` for `float`
+
+So, the number is: $(-1)^{0} \times (1 + (2^{-2} + 2^{-3} +2^{-6} + 2^{-7} + 2^{-10} + 2^{-11} + 2^{-14} + 2^{-15} + 2^{-18} + 2^{-19} + 2^{-22} + 2^{-23})) \times 2^{126 - 127}$ = `0.69999998807907104421875`.
+
+> Java also has `BigDecimal` which stores `0.7` as `0.7`.
