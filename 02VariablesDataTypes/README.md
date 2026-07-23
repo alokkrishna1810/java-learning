@@ -148,12 +148,12 @@ The computer memory stores everything into binary numbers, i.e., `0`s and `1`s. 
 
 ### Integer
 
-| Name | Size (in bits) | Range |
-|---------|---------|---------|
-| `long` | `64` | `-9,223,372,036,854,775,808` to `9,223,372,036,854,775,807` |
-| `int` | `32` | `-2,147,483,648` to `2,147,483,647` |
-| `short` | `16` | `-32,768` to `32,767` |
-| `byte` | `8` | `-128` to `127` |
+| Name | Size (in bits) | Range | Default Value |
+|---|---|---|---|
+| `long` | `64` | `-9,223,372,036,854,775,808` to `9,223,372,036,854,775,807` | `0L` |
+| `int` | `32` | `-2,147,483,648` to `2,147,483,647` | `0` |
+| `short` | `16` | `-32,768` to `32,767` | `0` |
+| `byte` | `8` | `-128` to `127` | `0` |
 
 Every number is signed in Java. So, the MSB is reserved as the _sign bit_. `1` represents negative and `0` represents positive.
 
@@ -184,10 +184,10 @@ System.out.printn("Integer values --> " + b + ", " + s + ", " + i + ", " + l + "
 
 These data types represents decimal numbers. For example, `5.23`.
 
-| Name | Size (in bits) | Range |
-|---------|---------|---------|
-| `double` | `64` | `4.9e-324` to `1.8e+308` |
-| `float` | `32` | `1.4e-045` to `3.4e+038` |
+| Name | Size (in bits) | Range | Default Value |
+|---|---|---|---|
+| `double` | `64` | `4.9e-324` to `1.8e+308` | `0.0d` |
+| `float` | `32` | `1.4e-045` to `3.4e+038` | `0.0f` |
 
 `float` is known for _single precision_ and `double` is known for _double precision_. In production, `float` is not preferred and `double` is preferred.
 
@@ -225,6 +225,8 @@ Characters cannot be represented in binary numbers, i.e., `0`s and `1`s. So, we 
 
 _ASCII_ uses `8` bits and has a limited range. _Unicode_ uses `16` bits and covers about every symbol used in almost every language.
 
+> The default value of `char` is `'\u0000'`. `char` is unsigned and the value ranges from `'\u0000'` to `'\uffff'`.
+
 ```java
 // Characters
 
@@ -237,7 +239,7 @@ System.out.printn("Character value --> " + c + ".");
 
 ### Boolean
 
-`boolean` represents only two values: `true` and `false`.
+`boolean` represents only two values: `true` and `false`. The default value is `false`. And its size is not defined in Java.
 
 > In C/C++, any non-zero number represents `true` and `0` represents `false`. But this is not valid in Java. In Java, booleans and numbers are never related.
 
