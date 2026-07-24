@@ -126,3 +126,4 @@ You can download JDK in your system from Oracle from any other website.
 3. [Type Conversion and Type Promotions](./03TypeConversion)
 4. [Operators](./04Operators)
 5. [Conditional Statements](./05Conditionals)
+6. [Loops and Jumps](./06LoopsJumps)

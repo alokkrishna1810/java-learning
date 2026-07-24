@@ -31,7 +31,10 @@ This program when compiled and run, gives the following output:
 
 ```
 Hello World!
+
 ```
+
+> `System.out.println()` prints whatever inside it and then starts a new line.
 
 For now consider the below code block as black box and just focus on what is inside this block. Later on, we will understand everything:
 
